@@ -5,34 +5,38 @@
 #include "tools.h"
 #include "enemy.h"
 
-#define COMBAT_STATE_F "finished"
-#define COMBAT_STATE_R "running"
+enum gameState {
+    RUNNING,
+    FLED,
+    WON,
+    DEAD,
+};
 
-int choises (Player& player, std::string& combatState, bool& fled, int &menuType){
+
+int choises (gameState& combatState, int &menuType){
     int a;
     while (true){
-        if (player.isAlive() && combatState != COMBAT_STATE_F && !fled){
+        if (combatState == RUNNING){
             std::cout << " <<<MENUE>>> " << std::endl;
             std::cout << " 1. Attack\n 2. Run away\n 3. Stats\n 4. Items\n" ;
             a = getNumber();
             if (a >= 1 && a <= 4) return a;
             menuType = 1;
             std::cout << "Invalid choice !!" << std::endl;
-        }else if (!player.isAlive() && !fled){
+        }else if (combatState == DEAD){
             std::cout << " <<<You Lose...>>> " << std::endl;
             std::cout << " 1. Retry\n 2. quit\n 3. Stats\n 4. Items\n" ;
             a = getNumber();
             menuType = 2;
             if (a >= 1 && a <= 4) return a;
             std::cout << "Invalid choice !!" << std::endl;
-        }else if (fled){
+        }else if (combatState == FLED){
             std::cout << " <<<You Ran Away 🐔...>>> " << std::endl;
             std::cout << " 1. New fight\n 2. quit\n 3. Stats\n" ;
             a = getNumber();
             menuType = 3;
             if (a >= 1 && a <= 3) return a;
-            std::cout << "Invalid choice !!" << std::endl;
-            
+            std::cout << "Invalid choice !!" << std::endl;  
         }
         else {
             std::cout << " <<<YOU WON !!!...>>> " << std::endl;
@@ -47,12 +51,10 @@ int choises (Player& player, std::string& combatState, bool& fled, int &menuType
 
 int main() {
     bool playerTurn = true;
-    bool fled = false;
+    bool isRunning = true;
     int choice;
     int menuType;
-    std::string combatState;
-    bool isRunning = true;
-
+    gameState combatState = RUNNING;
     Enemy enemy("Spider");
     Player hero("");
 
@@ -65,37 +67,37 @@ int main() {
     }
 
     while (isRunning) {
-        // --- 1. SET THE STATE AND MENU TYPE ---
-        if (hero.isAlive() && enemy.isAlive() && !fled) {
-            menuType = 1; // Combat menu
-            combatState = COMBAT_STATE_R;
-        } else if (!hero.isAlive()) {
-            menuType = 2; // Death menu
-            combatState = COMBAT_STATE_F;
-        } else if (fled) {
+        if (combatState != FLED){
+            // --- 1. SET THE STATE AND MENU TYPE ---
+            if (hero.isAlive() && enemy.isAlive()) {
+                menuType = 1; // Combat menu
+                combatState = RUNNING;
+            } else if (!hero.isAlive()) {
+                menuType = 2; // Death menu
+                combatState = DEAD;
+            }else {
+                menuType = 3; // Victory menu
+                combatState = WON;
+            }
+        }else {
             menuType = 4; // Flee menu
-            combatState = COMBAT_STATE_F;
-        } else {
-            menuType = 3; // Victory menu
-            combatState = COMBAT_STATE_F;
         }
-
         // --- 2. PLAYER OR ENEMY TURN ---
         if (playerTurn) {
             // Get the choice based on the current menu
-            choice = choises(hero, combatState, fled, menuType);
+            choice = choises(combatState, menuType);
             
             // Special case: Fleeing happens in menu 1, choice 2
             if (menuType == 1 && choice == 2) {
-                fled = hero.runAway(randomState(), true, enemy);
-                if (!fled) playerTurn = false; // Failed flee = Enemy hits you
+                combatState = (hero.runAway(randomState(), true) ? FLED : RUNNING);
+                if (combatState != FLED) playerTurn = false; // Failed flee = Enemy hits you
             } else {
                 // Execute options and update game state
                 isRunning = options(hero, enemy, choice, playerTurn, menuType);
                 
                 // If we chose "Restart" (Choice 1) in a non-combat menu
                 if (menuType != 1 && choice == 1) {
-                    fled = false; // Reset flee status for the new fight
+                    combatState = RUNNING;
                 }
             }
         } else {

@@ -3,13 +3,14 @@
 
 #include <vector>
 #include <string>
+#include "item.h"
 #include "enemy.h"
 
 class Player{
     private:
         std::string name;
         int maxHp, xp, hp, level, xpToNextLevel, attack, defense, gold;
-        std::vector<std::string> items;
+        std::vector<Item> inventory;
     public:
         //constructor
         Player(std::string PlayerName);
@@ -25,15 +26,18 @@ class Player{
         std::string getName() const { return name; }
         bool isAlive() const { return hp > 0; }
         int getLevel() const { return level; }
+        void showItems();
         //setters
         void takeDamage(int amount);
         void heal (int amout);
         void addXp(int amount);
         void addGold(int amount){gold += amount; }
         void levelUp();
+        void addItem(Item item);
+        void useItem(int index);
         //helpful functions
         void displayStats();
-        bool runAway(bool state,bool isTakingDamage,Enemy enemy);
+        bool runAway(bool state,bool isTakingDamage);
         std::string dialogue();
         void displayHealthBar();
 };

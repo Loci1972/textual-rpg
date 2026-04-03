@@ -72,12 +72,13 @@ void Player::displayStats(){
     dialogue();
 }
 
-bool Player::runAway(bool state,bool isTakingDamage,Enemy enemy){
+bool Player::runAway(bool state,bool isTakingDamage){
+    int damage_taken = 10;
     if (!state) std::cout << "you flee but you broke your leg\n";
     else if (state) std::cout << "you fled with SUCCESS !!! " << std::endl;
     if (isTakingDamage && !state) {
-        std::cout << ", -" << enemy.getAttack() - defense <<"\n";
-        takeDamage(enemy.getAttack());
+        std::cout << ", -" << damage_taken - defense <<"\n";
+        takeDamage(damage_taken);
     }
     return state;
 }
@@ -126,4 +127,28 @@ bool Player::loadFromFile(const std::string& filename) {
         return true;
     }
     return false; // Le fichier n'existe pas encore
+}
+
+void Player::addItem(Item item) {
+    inventory.push_back(item); // Corrigé "iventory"
+}
+
+void Player::useItem(int index) {
+    if (index >= 1 && (size_t)index <= inventory.size()) {  // ✅ <= au lieu de <
+        Item& it = inventory[index-1];  // ✅ index-1 !
+        heal(it.healPoints());
+        std::cout << "Used " << it.getName() << " - healed " 
+                  << it.healPoints() << " HP\n";
+        inventory.erase(inventory.begin() + (index-1));
+    } else {
+        std::cout << "Invalid choice!" << std::endl;
+    }
+}
+
+void Player::showItems(){
+    std::cout << "==" <<"Items" << "==" << std::endl;
+    for (int i = 1; i < inventory.size() + 1; i++){
+        int itemIndex = i - 1;
+        std::cout << i <<"|"<< inventory[itemIndex].getName() << std::endl;
+    }
 }

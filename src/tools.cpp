@@ -65,6 +65,7 @@ bool options(Player& player, Enemy& enemy, int& choice, bool& playerTurn, int& m
                 std::cout << "Bag empty...\n";
                 break;
         }
+        return true;
     } 
     // Cas 2, 3 ou 4 : Le combat est fini (Mort, Victoire ou Fuite)
     else {
@@ -77,7 +78,7 @@ bool options(Player& player, Enemy& enemy, int& choice, bool& playerTurn, int& m
                 break;
             case 2: // Quit
                 player.saveToFile("save.txt");
-                return false; 
+                return false;
             case 3: // Stats
                 player.displayStats();
                 break;
@@ -86,5 +87,5 @@ bool options(Player& player, Enemy& enemy, int& choice, bool& playerTurn, int& m
                 break;
         }
     }
-    return true; 
+    return true;
 }
