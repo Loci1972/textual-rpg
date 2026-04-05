@@ -14,6 +14,7 @@ The player can fight enemies, gain experience, level up, and manage game progres
 ## ✨ Features
 
 * ⚔️ Turn-based combat system
+* 💼 Item system (shop coming soon...)
 * 📈 XP & Level progression
 * ❤️ Health, attack, and defense stats
 * 💬 Dynamic dialogue based on player HP
@@ -61,7 +62,7 @@ g++ main.cpp player.cpp enemy.cpp tools.cpp -o game
 
 ## 💾 Save System
 
-Player data is stored in:
+Player data is stored in: "save.txt"
 
 ```
 save.txt
@@ -79,7 +80,7 @@ Includes:
 
 ## 🚀 Future Improvements
 
-* Inventory system
+* Inventory system (Done)
 * Multiple enemies
 * Skills / abilities
 * Graphical version (SFML / Raylib)
