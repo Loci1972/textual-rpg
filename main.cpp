@@ -25,7 +25,7 @@ int choises (gameState& combatState, int &menuType){
             std::cout << "Invalid choice !!" << std::endl;
         }else if (combatState == DEAD){
             std::cout << " <<<You Lose...>>> " << std::endl;
-            std::cout << " 1. Retry\n 2. quit\n 3. Stats\n 4. Items\n" ;
+            std::cout << " 1. Retry\n 2. quit\n 3. Stats\n" ;
             a = getNumber();
             menuType = 2;
             if (a >= 1 && a <= 4) return a;
