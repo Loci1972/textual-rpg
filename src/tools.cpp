@@ -48,10 +48,12 @@ bool randomState () {
 
 bool options(Player& player, Enemy& enemy, int& choice, bool& playerTurn, int& menueType) {
     // Cas 1 : Le combat est en cours
+    int itemChoice;
     if (menueType == 1) {
         switch (choice) {
             case 1: // Attack
                 enemy.takeDamage(player.getAttack());
+		enemy.displayHealthBar();
                 std::cout << "You hit " << enemy.getName() << " with " 
                           << realDamage(enemy, player, "player") << " Damages.\n";
                 playerTurn = false; 
@@ -62,7 +64,11 @@ bool options(Player& player, Enemy& enemy, int& choice, bool& playerTurn, int& m
                 player.displayStats();
                 break;
             case 4: // Items
-                std::cout << "Bag empty...\n";
+                player.showItems();
+                std::cout << "<<ITEMS>> \n 1. Use item\n 2. Cancel\n ? : ";
+                itemChoice = getNumber();
+                if (itemChoice == 1) player.useItem(getNumber());
+                if (itemChoice == 2) std::cout << "canceled" << std::endl;
                 break;
         }
         return true;
@@ -77,6 +83,7 @@ bool options(Player& player, Enemy& enemy, int& choice, bool& playerTurn, int& m
                 std::cout << "Restarting...\n";
                 break;
             case 2: // Quit
+		player.heal(player.getMaxHp());
                 player.saveToFile("save.txt");
                 return false;
             case 3: // Stats
