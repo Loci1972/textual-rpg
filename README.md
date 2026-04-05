@@ -82,7 +82,6 @@ Includes:
 * Inventory system
 * Multiple enemies
 * Skills / abilities
-* Better game state architecture (enum-based)
 * Graphical version (SFML / Raylib)
 
 ---
