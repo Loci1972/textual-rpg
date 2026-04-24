@@ -10,5 +10,6 @@
 int getNumber();
 std::string getString();
 bool randomState ();
+int randomInt(int min, int max);
 
 #endif
