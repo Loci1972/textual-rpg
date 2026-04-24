@@ -31,12 +31,6 @@ std::string getString(){
     return text;
 }
 
-int realDamage(const Enemy& enemy, const Player& player, const std::string& entity){
-    if (entity == "player") return std::max(0, player.getAttack() - enemy.getDefense());
-    else if (entity == "enemy") return std::max(0, enemy.getAttack() - player.getDefense());
-    return 0;
-}
-
 bool randomState () {
     std::random_device rd; 
     std::mt19937 gen(rd()); 
@@ -44,55 +38,4 @@ bool randomState () {
     int random_num = distrib(gen);
     if (random_num == 1) return true;
     else return false;
-}
-
-bool options(Player& player, Enemy& enemy, int& choice, bool& playerTurn, int& menueType) {
-    // Cas 1 : Le combat est en cours
-    int itemChoice;
-    if (menueType == 1) {
-        switch (choice) {
-            case 1: // Attack
-                enemy.takeDamage(player.getAttack());
-		enemy.displayHealthBar();
-                std::cout << "You hit " << enemy.getName() << " with " 
-                          << realDamage(enemy, player, "player") << " Damages.\n";
-                playerTurn = false; 
-                break;
-            case 2: // Run away (souvent géré dans le main, mais au cas où)
-                break;
-            case 3: // Stats
-                player.displayStats();
-                break;
-            case 4: // Items
-                player.showItems();
-                std::cout << "<<ITEMS>> \n 1. Use item\n 2. Cancel\n ? : ";
-                itemChoice = getNumber();
-                if (itemChoice == 1) player.useItem(getNumber());
-                if (itemChoice == 2) std::cout << "canceled" << std::endl;
-                break;
-        }
-        return true;
-    } 
-    // Cas 2, 3 ou 4 : Le combat est fini (Mort, Victoire ou Fuite)
-    else {
-        switch (choice) {
-            case 1: // Restart / Continue
-                player.heal(player.getMaxHp());
-                enemy.fullHeal();
-                playerTurn = true;
-                std::cout << "Restarting...\n";
-                break;
-            case 2: // Quit
-		player.heal(player.getMaxHp());
-                player.saveToFile("save.txt");
-                return false;
-            case 3: // Stats
-                player.displayStats();
-                break;
-            case 4: // Items
-                std::cout << "Bag empty...\n";
-                break;
-        }
-    }
-    return true;
 }
