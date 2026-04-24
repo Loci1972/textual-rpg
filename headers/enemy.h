@@ -8,21 +8,23 @@
 class Enemy{
     private:
         std::string name;
-        int maxHp, xp, hp, level, xpToNextLevel, attack, defense, goldReward;
+        int maxHp, xp, hp, level, xpReward, attack, defense, goldReward;
     public:
         //constructor
-        Enemy(std::string PlayerName);
+        Enemy(std::string PlayerName, int level_add);
         //getters
+        int getLevel() const { return level; }
         int getAttack() const { return attack; }
         int getMaxHp() const {return maxHp;}
         int getDefense() const { return defense; }
+        int getXpReward() const {return xpReward ;}
         int getHp() const { return hp; }
         int getGoldReward() const { return goldReward; }
         bool isAlive() const { return hp > 0; }
         std::string getName() const { return name; }
         //setters
-        void takeDamage(int amount);
-        void addXp(int amount);
+        int takeDamage(int amount);
+        void addDefense(int amount){defense += amount;}
         void levelUp();
         void fullHeal () {hp = maxHp;}
         //helpful functions
